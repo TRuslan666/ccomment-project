@@ -83,6 +83,9 @@ export default function HomePage() {
           <Link to="/classify">
           </Link>
           <Link to="/register">
+            <Button size="large" icon={<SafetyOutlined />}>
+              Зарегистрироваться
+            </Button>
           </Link>
         </Space>
       </div>

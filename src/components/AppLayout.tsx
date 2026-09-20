@@ -1,5 +1,5 @@
 import { Layout, Menu, Typography, theme } from 'antd'
-import { HomeOutlined } from '@ant-design/icons'
+import { HomeOutlined, LoginOutlined, UserAddOutlined } from '@ant-design/icons'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 
 const { Header, Content, Footer } = Layout
@@ -7,6 +7,8 @@ const { Title } = Typography
 
 const menuItems = [
   { key: '/', icon: <HomeOutlined />, label: <Link to="/">Главная</Link> },
+  { key: '/login', icon: <LoginOutlined />, label: <Link to="/login">Вход</Link> },
+  { key: '/register', icon: <UserAddOutlined />, label: <Link to="/register">Регистрация</Link> },
 ]
 
 export default function AppLayout() {
