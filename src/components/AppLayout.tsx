@@ -57,7 +57,7 @@ export default function AppLayout() {
       </Content>
 
       <Footer style={{ textAlign: 'center', color: '#666' }}>
-        Классификатор комментариев © {new Date().getFullYear()} — Лабораторная работа №1
+        CComment © 2026. Все права защищены.
       </Footer>
     </Layout>
   )

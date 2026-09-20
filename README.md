@@ -1,32 +1,82 @@
-# React + TypeScript + Vite
+## Классификатор комментариев CComent
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
-Currently, two official plugins are available:
+Fullstack-веб-приложение для автоматического определения тональности пользовательских комментариев и отзывов (положительной или отрицательной), с авторизацией пользователей и сохранением истории запросов.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Актуальность
 
-## React Compiler
+Онлайн-сервисы ежедневно обрабатывают огромные объёмы пользовательских текстов: отзывы на товары, комментарии под публикациями, сообщения в поддержке и на форумах. Ручная модерация такого потока практически невозможна (она дорогая, медленная и плохо масштабируется).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Автоматическое определение тональности комментариев позволяет:
 
-## Expanding the Oxlint configuration
+- быстро выявлять негативные и токсичные сообщения;
+- приоритизировать обращения в службу поддержки;
+- анализировать репутацию бренда и качество продукта на основе отзывов;
+- снижать нагрузку на модераторов и ускорять реакцию на проблемный контент.
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+### Цель проекта
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+Разработать fullstack-приложение, позволяющее пользователю отправлять текстовый комментарий и получать автоматическую классификацию его тональности (положительная или отрицательная), с сохранением истории обработанных запросов в базе данных.
+
+
+### Стек технологий (обязательный, согласно методическим материалам курса)
+
+**Backend:** Python + FastAPI
+
+**База данных и ORM:** PostgreSQL + SQLAlchemy
+
+**Frontend:** React + TypeScript 
+
+**Система контроля версий:** Git 
+
+**ML-модуль:** Готовая предобученная модель для анализа тональности
+
+
+### Эндпоинты 
+
+| Эндпоинты        | Путь         | Описание                                      |
+|------------------|--------------|-----------------------------------------------|
+| Главная          | `/`          | Описание проекта, возможности, сценарии       |
+| Классификатор    | `/classify`  | Форма ввода текста + демо-классификация       |
+| История          | `/history`   | Таблица демонстрационных результатов         |
+| Вход             | `/login`     | Форма входа (демо)                            |
+| Регистрация      | `/register`  | Форма регистрации (демо)                      |
+
+
+
+### Структура проекта
+
+```
+src/
+├── components/
+│   └── AppLayout.tsx      # Общий layout с меню
+├── pages/
+│   ├── HomePage.tsx       # Главная
+│   ├── ClassifyPage.tsx   # Классификатор
+│   ├── HistoryPage.tsx    # История
+│   ├── LoginPage.tsx      # Вход
+│   └── RegisterPage.tsx   # Регистрация
+├── App.tsx                # Маршруты
+├── main.tsx               # Точка входа + ConfigProvider
+└── index.css              # Глобальные стили
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+### Запуск frontend
+
+```bash
+# Установка зависимостей
+npm install
+
+# Режим разработки
+npm run dev
+
+# Сборка для production
+npm run build
+
+# Предпросмотр production-сборки
+npm run preview
+```
+
+После `npm run dev` приложение будет доступно по адресу, который выведет Vite (обычно `http://localhost:5173`).
+
+
