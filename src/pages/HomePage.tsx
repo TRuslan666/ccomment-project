@@ -81,6 +81,9 @@ export default function HomePage() {
       <div style={{ marginTop: 32, textAlign: 'center' }}>
         <Space size="middle" wrap>
           <Link to="/classify">
+            <Button type="primary" size="large" icon={<CommentOutlined />}>
+              Попробовать классификатор
+            </Button>
           </Link>
           <Link to="/register">
             <Button size="large" icon={<SafetyOutlined />}>

@@ -1,5 +1,5 @@
 import { Layout, Menu, Typography, theme } from 'antd'
-import { HomeOutlined, LoginOutlined, UserAddOutlined } from '@ant-design/icons'
+import { HomeOutlined, LoginOutlined, UserAddOutlined, CommentOutlined, HistoryOutlined } from '@ant-design/icons'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 
 const { Header, Content, Footer } = Layout
@@ -7,6 +7,8 @@ const { Title } = Typography
 
 const menuItems = [
   { key: '/', icon: <HomeOutlined />, label: <Link to="/">Главная</Link> },
+  { key: '/classify', icon: <CommentOutlined />, label: <Link to="/classify">Классификатор</Link> },
+  { key: '/history', icon: <HistoryOutlined />, label: <Link to="/history">История</Link> },
   { key: '/login', icon: <LoginOutlined />, label: <Link to="/login">Вход</Link> },
   { key: '/register', icon: <UserAddOutlined />, label: <Link to="/register">Регистрация</Link> },
 ]
@@ -57,7 +59,7 @@ export default function AppLayout() {
       </Content>
 
       <Footer style={{ textAlign: 'center', color: '#666' }}>
-        CComment © 2026. Все права защищены.
+        Классификатор комментариев © {new Date().getFullYear()} — Лабораторная работа №1
       </Footer>
     </Layout>
   )

@@ -3,6 +3,8 @@ import AppLayout from './components/AppLayout'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
+import ClassifyPage from './pages/ClassifyPage'
+import HistoryPage from './pages/HistoryPage'
 
 function App() {
   return (
@@ -12,6 +14,8 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
+          <Route path="classify" element={<ClassifyPage />} />
+          <Route path="history" element={<HistoryPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
