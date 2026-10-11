@@ -1,9 +1,10 @@
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
+from app.crud import comment as comment_crud
 from app.crud import user as user_crud
 from app.db.session import get_db
-from app.models import User
+from app.models import Comment, User
 
 
 def get_user_or_404(user_id: int, db: Session = Depends(get_db)) -> User:
@@ -13,4 +14,8 @@ def get_user_or_404(user_id: int, db: Session = Depends(get_db)) -> User:
     return user
 
 
-
+def get_comment_or_404(comment_id: int, db: Session = Depends(get_db)) -> Comment:
+    comment = comment_crud.get_comment(db, comment_id)
+    if comment is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, f"Комментарий с id={comment_id} не найден")
+    return comment
