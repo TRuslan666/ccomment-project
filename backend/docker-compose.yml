@@ -1,0 +1,16 @@
+# Быстрый запуск PostgreSQL для разработки: docker compose up -d
+services:
+  db:
+    image: postgres:16
+    container_name: ccomment-db
+    environment:
+      POSTGRES_USER: ccomment_user
+      POSTGRES_PASSWORD: change_me
+      POSTGRES_DB: ccomment
+    ports:
+      - "5432:5432"
+    volumes:
+      - ccomment_pgdata:/var/lib/postgresql/data
+
+volumes:
+  ccomment_pgdata:
