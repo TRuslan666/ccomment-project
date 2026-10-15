@@ -4,8 +4,6 @@ from sqlalchemy import DateTime, ForeignKey, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
-from backend.app.models.classification import Classification
-from backend.app.models.user import User
 
 
 class Comment(Base):

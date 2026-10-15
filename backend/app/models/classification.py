@@ -5,7 +5,6 @@ from sqlalchemy import DateTime, Enum, Float, ForeignKey, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
-from backend.app.models.comment import Comment
 
 
 class Sentiment(str, enum.Enum):
