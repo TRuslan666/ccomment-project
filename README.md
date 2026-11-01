@@ -1,5 +1,4 @@
-## Классификатор комментариев CComent
-
+## Классификатор комментариев CComment
 
 Fullstack-веб-приложение для автоматического определения тональности пользовательских комментариев и отзывов (положительной или отрицательной), с авторизацией пользователей и сохранением истории запросов.
 
@@ -18,52 +17,73 @@ Fullstack-веб-приложение для автоматического оп
 
 Разработать fullstack-приложение, позволяющее пользователю отправлять текстовый комментарий и получать автоматическую классификацию его тональности (положительная или отрицательная), с сохранением истории обработанных запросов в базе данных.
 
-
 ### Стек технологий (обязательный, согласно методическим материалам курса)
 
 **Backend:** Python + FastAPI
 
 **База данных и ORM:** PostgreSQL + SQLAlchemy
 
-**Frontend:** React + TypeScript 
+**Frontend:** React + TypeScript
 
-**Система контроля версий:** Git 
+**Система контроля версий:** Git
 
 **ML-модуль:** Готовая предобученная модель для анализа тональности
 
+### Структура репозитория
 
-### Эндпоинты 
+```
+ccomment-project/
+├── frontend/          # клиентская часть (React + TypeScript + Vite)
+├── backend/           # серверная часть (FastAPI + SQLAlchemy + PostgreSQL)
+├── docs/
+│   └── screenshots/   # скриншоты экранов
+├── .gitignore
+└── README.md
+```
 
-| Эндпоинты        | Путь         | Описание                                      |
+---
+
+## Frontend
+
+### Экраны и маршруты
+
+| Экран            | Путь         | Описание                                      |
 |------------------|--------------|-----------------------------------------------|
 | Главная          | `/`          | Описание проекта, возможности, сценарии       |
 | Классификатор    | `/classify`  | Форма ввода текста + демо-классификация       |
-| История          | `/history`   | Таблица демонстрационных результатов         |
+| История          | `/history`   | Таблица демонстрационных результатов          |
 | Вход             | `/login`     | Форма входа (демо)                            |
 | Регистрация      | `/register`  | Форма регистрации (демо)                      |
 
-
-
-### Структура проекта
+### Структура frontend
 
 ```
-src/
-├── components/
-│   └── AppLayout.tsx      # Общий layout с меню
-├── pages/
-│   ├── HomePage.tsx       # Главная
-│   ├── ClassifyPage.tsx   # Классификатор
-│   ├── HistoryPage.tsx    # История
-│   ├── LoginPage.tsx      # Вход
-│   └── RegisterPage.tsx   # Регистрация
-├── App.tsx                # Маршруты
-├── main.tsx               # Точка входа + ConfigProvider
-└── index.css              # Глобальные стили
+frontend/
+├── public/
+├── src/
+│   ├── components/
+│   │   └── AppLayout.tsx      # Общий layout с меню
+│   ├── pages/
+│   │   ├── HomePage.tsx       # Главная
+│   │   ├── ClassifyPage.tsx   # Классификатор
+│   │   ├── HistoryPage.tsx    # История
+│   │   ├── LoginPage.tsx      # Вход
+│   │   └── RegisterPage.tsx   # Регистрация
+│   ├── App.tsx                # Маршруты
+│   ├── main.tsx               # Точка входа + ConfigProvider
+│   └── index.css              # Глобальные стили
+├── index.html
+├── package.json
+└── vite.config.ts
 ```
 
 ### Запуск frontend
 
+Команды выполняются из каталога `frontend`:
+
 ```bash
+cd frontend
+
 # Установка зависимостей
 npm install
 
@@ -79,4 +99,116 @@ npm run preview
 
 После `npm run dev` приложение будет доступно по адресу, который выведет Vite (обычно `http://localhost:5173`).
 
+---
+
+## Backend
+
+Серверная часть: **FastAPI + SQLAlchemy 2.0 + PostgreSQL**. Код находится в каталоге `backend/`.
+
+### Структура backend
+
+```
+backend/
+├── app/
+│   ├── api/
+│   │   ├── routes/            # маршруты API: users, comments, classifications
+│   │   ├── deps.py            # общие зависимости (получение объекта или 404)
+│   │   └── router.py          # сборка маршрутов под префиксом /api
+│   ├── core/config.py         # конфигурация (переменные окружения / .env)
+│   ├── crud/                  # операции с данными и бизнес-логика
+│   ├── db/                    # подключение, сессии, создание таблиц
+│   ├── models/                # модели SQLAlchemy
+│   ├── schemas/               # схемы валидации запросов и ответов (Pydantic)
+│   └── main.py                # точка входа FastAPI
+├── tests/                     # автотесты API (pytest)
+├── .env.example               # пример настроек без секретов
+├── docker-compose.yml         # PostgreSQL для разработки
+├── pytest.ini
+└── requirements.txt
+```
+
+### Модель данных
+
+| Таблица | Поля | Связи |
+|---|---|---|
+| `users` | `id` (PK), `name`, `email` (уникальный), `created_at` | 1 : N с `comments` |
+| `comments` | `id` (PK), `user_id` (FK → users.id), `text`, `created_at` | N : 1 с `users`, 1 : 1 с `classifications` |
+| `classifications` | `id` (PK), `comment_id` (FK → comments.id, уникальный), `sentiment` (positive / negative / neutral), `confidence` (от 0 до 1), `model_name`, `created_at` | 1 : 1 с `comments` |
+
+Внешние ключи объявлены с `ON DELETE CASCADE`: при удалении пользователя удаляются его комментарии, при удалении комментария удаляется результат классификации.
+
+Пароли и токены будут добавлены вместе с авторизацией, ML-модель подключается позже: пока результат классификации записывается через API.
+
+### Эндпоинты API
+
+Интерактивная документация (Swagger UI): `http://localhost:8000/docs`. Здесь можно выполнять запросы прямо в браузере (кнопка **Try it out**).
+
+| Метод | Путь | Описание | Статусы |
+|---|---|---|---|
+| POST | `/api/users` | создать пользователя | 201, 409 (email занят), 422 |
+| GET | `/api/users`, `/api/users/{id}` | список / один пользователь | 200, 404 |
+| PATCH | `/api/users/{id}` | изменить пользователя | 200, 404, 409, 422 |
+| DELETE | `/api/users/{id}` | удалить (вместе с комментариями) | 204, 404 |
+| POST | `/api/comments` | создать комментарий | 201, 404 (нет пользователя), 422 |
+| GET | `/api/comments?user_id=&skip=&limit=` | список (история пользователя) | 200, 422 |
+| GET | `/api/comments/{id}` | один комментарий с результатом | 200, 404 |
+| PATCH | `/api/comments/{id}` | изменить текст (старый результат удаляется) | 200, 404, 422 |
+| DELETE | `/api/comments/{id}` | удалить комментарий | 204, 404 |
+| POST | `/api/comments/{id}/classification` | сохранить результат | 201, 404, 409 (уже есть), 422 |
+| GET / PATCH / DELETE | `/api/comments/{id}/classification` | прочитать / изменить / удалить результат | 200 / 204, 404, 422 |
+| GET | `/health` | проверка работоспособности сервера | 200 |
+
+Основные правила валидации: текст комментария от 5 до 1000 символов, `confidence` от 0 до 1, `sentiment` — одно из значений `positive`, `negative`, `neutral`, email должен быть корректным и уникальным, `limit` в списках от 1 до 200.
+
+### Запуск backend
+
+Требуется Python 3.11+ и PostgreSQL 14+ (проще всего запустить через Docker).
+
+Команды ниже выполняются из каталога `backend`. Сервер нужно запускать **именно из него**, иначе Python не найдёт пакет `app`.
+
+```bash
+cd backend
+
+# 1. Виртуальное окружение и зависимости
+python -m venv .venv
+.venv\Scripts\activate          # Windows;  Linux/macOS: source .venv/bin/activate
+pip install -r requirements.txt
+
+# 2. База данных
+docker compose up -d            # вариант А: PostgreSQL в контейнере
+# вариант Б: свой PostgreSQL — создайте пользователя и базу ccomment
+
+# 3. Настройки (необязательно для запуска с docker-compose)
+copy .env.example .env          # Linux/macOS: cp .env.example .env
+
+# 4. Создание таблиц (также выполняется автоматически при старте приложения)
+python -m app.db.init_db
+
+# 5. Запуск сервера
+uvicorn app.main:app --reload
+```
+
+После запуска:
+
+- API: `http://localhost:8000`
+- проверка: `http://localhost:8000/health`
+- документация: `http://localhost:8000/docs`
+
+Параметры подключения читаются из переменных окружения или файла `.env` (образец — `.env.example`). Значения по умолчанию совпадают с настройками `docker-compose.yml`, поэтому без `.env` приложение подключится к контейнеру. Файл `.env` в репозиторий не добавляется.
+
+Если вы меняете логин, пароль или имя базы, они должны совпадать в `docker-compose.yml` и в `DATABASE_URL`. Обратите внимание: PostgreSQL применяет `POSTGRES_PASSWORD` только при первом создании тома с данными. Чтобы пересоздать базу с нуля, выполните `docker compose down -v` (все данные будут удалены), затем `docker compose up -d`.
+
+### Тесты
+
+```bash
+cd backend
+pytest                                 
+```
+
+Для проверки на PostgreSQL задайте отдельную тестовую базу (таблицы в ней пересоздаются) и переменную `TEST_DATABASE_URL`:
+
+```bash
+$env:TEST_DATABASE_URL="postgresql+psycopg://ccomment_user:change_me@localhost:5432/ccomment_test"
+pytest
+```
 
