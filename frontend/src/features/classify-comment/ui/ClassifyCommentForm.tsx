@@ -1,8 +1,12 @@
-import { Alert, Button, Card, Divider, Form, Input, Space, Typography } from 'antd'
-import type { Rule } from 'antd/es/form'
-import { CommentOutlined, ReloadOutlined } from '@ant-design/icons'
+import { useState } from 'react'
 import type { KeyboardEvent } from 'react'
-import { COMMENT_MAX_LENGTH, COMMENT_MIN_LENGTH } from '@/entities/classification'
+import { Alert, App, Button, Card, Divider, Form, Input, Space, Typography } from 'antd'
+import type { Rule } from 'antd/es/form'
+import { CheckOutlined, CommentOutlined, ReloadOutlined, SaveOutlined } from '@ant-design/icons'
+import { Link } from 'react-router-dom'
+import { COMMENT_MAX_LENGTH, COMMENT_MIN_LENGTH, useHistoryStore } from '@/entities/classification'
+import type { ClassificationResult as ClassificationResultData } from '@/entities/classification'
+import { ROUTES } from '@/shared/config/routes'
 import { useClassifyComment } from '../model/useClassifyComment'
 import { ClassificationResult } from './ClassificationResult'
 
@@ -13,6 +17,7 @@ interface ClassifyFormValues {
   comment: string
 }
 
+/** Правила проверки текста. Пробелы по краям не считаются символами. */
 const commentRules: Rule[] = [
   { required: true, whitespace: true, message: 'Введите текст комментария' },
   {
@@ -26,9 +31,14 @@ const commentRules: Rule[] = [
   },
 ]
 
+/** Форма ввода текста и блок результата. Вся логика состояния — в хуке useClassifyComment. */
 export function ClassifyCommentForm() {
   const [form] = Form.useForm<ClassifyFormValues>()
   const { state, submit, reset } = useClassifyComment()
+  const { addItem } = useHistoryStore()
+  const { message } = App.useApp()
+  // результат, который уже сохранён в историю: для нового результата кнопка снова активна
+  const [savedResult, setSavedResult] = useState<ClassificationResultData | null>(null)
   const isLoading = state.status === 'loading'
 
   const handleFinish = (values: ClassifyFormValues) => submit(values.comment)
@@ -38,6 +48,13 @@ export function ClassifyCommentForm() {
     reset()
   }
 
+  const handleSave = (result: ClassificationResultData) => {
+    addItem(result)
+    setSavedResult(result)
+    message.success('Результат сохранён в историю')
+  }
+
+  // Ctrl+Enter (или Cmd+Enter) отправляет форму, обычный Enter — перенос строки
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') form.submit()
   }
@@ -89,6 +106,20 @@ export function ClassifyCommentForm() {
         <>
           <Divider />
           <ClassificationResult result={state.result} />
+          <Space style={{ marginTop: 16 }} wrap>
+            {savedResult === state.result ? (
+              <>
+                <Button icon={<CheckOutlined />} disabled>
+                  Сохранено
+                </Button>
+                <Link to={ROUTES.history}>Открыть историю</Link>
+              </>
+            ) : (
+              <Button icon={<SaveOutlined />} onClick={() => handleSave(state.result)}>
+                Сохранить в историю
+              </Button>
+            )}
+          </Space>
         </>
       )}
     </Card>
