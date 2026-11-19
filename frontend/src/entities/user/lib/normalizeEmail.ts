@@ -1,0 +1,1 @@
+export const normalizeEmail = (value: string | undefined): string | undefined => value?.trim()
