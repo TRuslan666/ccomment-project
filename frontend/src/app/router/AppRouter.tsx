@@ -4,7 +4,7 @@ import { AppLayout } from '../layouts/AppLayout'
 import HomePage from '@/pages/HomePage'
 import LoginPage from '@/pages/LoginPage'
 import RegisterPage from '@/pages/RegisterPage'
-import ClassifyPage from '@/pages/ClassifyPage'
+import { ClassifyPage } from '@/pages/classify'
 import HistoryPage from '@/pages/HistoryPage'
 
 export function AppRouter() {

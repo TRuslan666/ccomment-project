@@ -20,7 +20,6 @@ body {
   padding: 24px 16px;
 }
 
-
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -36,8 +35,13 @@ body {
   animation: fade-in-up 0.25s ease-out;
 }
 
+.fade-in-up {
+  animation: fade-in-up 0.35s ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .page-transition {
+  .page-transition,
+  .fade-in-up {
     animation: none;
   }
 }
