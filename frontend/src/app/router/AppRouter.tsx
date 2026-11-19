@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import { ROUTES } from '@/shared/config/routes'
 import { AppLayout } from '../layouts/AppLayout'
-import HomePage from '@/pages/HomePage'
+import { HomePage } from '@/pages/home'
 import { LoginPage } from '@/pages/login'
 import { RegisterPage } from '@/pages/register'
 import { ClassifyPage } from '@/pages/classify'
