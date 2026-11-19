@@ -1,17 +1,12 @@
-import { Typography, Table, Tag, Card, Empty, Space, Button } from 'antd'
-import { HistoryOutlined, LikeOutlined, DislikeOutlined, CommentOutlined } from '@ant-design/icons'
+import { Typography, Table, Card, Empty, Space, Button } from 'antd'
+import { HistoryOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/es/table'
 import { Link } from 'react-router-dom'
+import { SentimentTag } from '@/entities/classification'
+import type { HistoryItem } from '@/entities/classification'
+import { formatDateTime } from '@/shared/lib/formatDateTime'
 
 const { Title, Paragraph, Text } = Typography
-
-interface HistoryItem {
-  id: number
-  text: string
-  sentiment: 'positive' | 'negative' | 'neutral'
-  confidence: number
-  createdAt: string
-}
 
 const demoHistory: HistoryItem[] = [
   {
@@ -19,51 +14,46 @@ const demoHistory: HistoryItem[] = [
     text: 'Товар отличный, доставка быстрая, очень рекомендую!',
     sentiment: 'positive',
     confidence: 0.91,
-    createdAt: '2026-09-18 14:32',
+    createdAt: '2026-09-18T14:32:00',
   },
   {
     id: 2,
     text: 'Качество ужасное, сломалось через неделю. Не рекомендую.',
     sentiment: 'negative',
     confidence: 0.87,
-    createdAt: '2026-09-17 09:15',
+    createdAt: '2026-09-17T09:15:00',
   },
   {
     id: 3,
     text: 'Нормальный товар, ничего особенного.',
     sentiment: 'neutral',
     confidence: 0.52,
-    createdAt: '2026-09-16 21:40',
+    createdAt: '2026-09-16T21:40:00',
   },
   {
     id: 4,
     text: 'Супер сервис, всё понравилось, буду заказывать ещё!',
     sentiment: 'positive',
     confidence: 0.94,
-    createdAt: '2026-09-15 11:05',
+    createdAt: '2026-09-15T11:05:00',
   },
   {
     id: 5,
     text: 'Долго ждал, поддержка не отвечает, разочарован.',
     sentiment: 'negative',
     confidence: 0.79,
-    createdAt: '2026-09-14 16:22',
+    createdAt: '2026-09-14T16:22:00',
   },
 ]
-
-const sentimentMap = {
-  positive: { color: 'success', icon: <LikeOutlined />, label: 'Положительный' },
-  negative: { color: 'error', icon: <DislikeOutlined />, label: 'Отрицательный' },
-  neutral: { color: 'default', icon: <CommentOutlined />, label: 'Нейтральный' },
-}
 
 const columns: ColumnsType<HistoryItem> = [
   {
     title: 'Дата',
     dataIndex: 'createdAt',
     key: 'createdAt',
-    width: 140,
+    width: 160,
     responsive: ['md'],
+    render: (value: string) => formatDateTime(value),
   },
   {
     title: 'Текст',
@@ -81,14 +71,7 @@ const columns: ColumnsType<HistoryItem> = [
     dataIndex: 'sentiment',
     key: 'sentiment',
     width: 160,
-    render: (sentiment: HistoryItem['sentiment']) => {
-      const cfg = sentimentMap[sentiment]
-      return (
-        <Tag icon={cfg.icon} color={cfg.color}>
-          {cfg.label}
-        </Tag>
-      )
-    },
+    render: (sentiment: HistoryItem['sentiment']) => <SentimentTag sentiment={sentiment} />,
   },
   {
     title: 'Уверенность',
