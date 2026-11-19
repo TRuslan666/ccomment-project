@@ -1,22 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { ConfigProvider } from 'antd'
-import './index.css'
-import ruRU from 'antd/locale/ru_RU'
-import App from './App.tsx'
+import '@/app/styles/index.css'
+import App from '@/app/App'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ConfigProvider
-      locale={ruRU}
-      theme={{
-        token: {
-          colorPrimary: '#1677ff',
-          borderRadius: 8,
-        },
-      }}
-    >
-      <App />
-    </ConfigProvider>
+    <App />
   </StrictMode>,
 )

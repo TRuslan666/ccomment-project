@@ -1,4 +1,4 @@
-# Быстрый запуск PostgreSQL для разработки: docker compose up -d
+ # Быстрый запуск PostgreSQL для разработки: docker compose up -d
 services:
   db:
     image: postgres:16
