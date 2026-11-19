@@ -1,4 +1,5 @@
 export type { ClassificationResult, HistoryItem, Sentiment } from './model/types'
 export { COMMENT_MAX_LENGTH, COMMENT_MIN_LENGTH } from './model/constants'
+export { HistoryProvider, useHistoryStore } from './model/historyStore.tsx'
 export { SENTIMENT_VIEW } from './lib/sentimentConfig'
 export { SentimentTag } from './ui/SentimentTag'
